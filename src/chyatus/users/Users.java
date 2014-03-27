@@ -1,7 +1,7 @@
 package chyatus.users;
 
-import chyatus.users.User;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,10 +12,10 @@ import java.util.Set;
  */
 public final class Users {
 
-    private static Set<User> allUsers = new HashSet<>();
+    private static final Set<User> allUsers = new HashSet<>();
 
     public static synchronized Set<User> getAll() {
-        return new HashSet<>(allUsers);
+        return Collections.unmodifiableSet(allUsers);
     }
 
     public static synchronized boolean addUser(User user) {
