@@ -1,6 +1,6 @@
 package chyatus;
 
-import chyatus.commands.Command;
+import chyatus.commands.Message;
 import chyatus.users.Users;
 import chyatus.users.User;
 import java.io.BufferedReader;
@@ -81,11 +81,11 @@ public class Client implements Constants {
                     if (key.isAcceptable()) {
                         try (SocketChannel channel = tcpChannel.accept();
                                 ObjectInputStream ois = new ObjectInputStream(channel.socket().getInputStream())) {
-                            Command command = (Command) ois.readObject();
+                            Message command = (Message) ois.readObject();
                             switch (command.type) {
-                                case Command.TYPE_MULTI_MESSAGE:
-                                case Command.TYPE_SINGLE_MESSAGE:
-                                    System.out.println("New message: " + command.message);
+                                case Message.TYPE_MULTI_MESSAGE:
+                                case Message.TYPE_SINGLE_MESSAGE:
+                                    System.out.println("New message: " + command.text);
                             }
                         } catch (ClassNotFoundException e) {
                             System.out.println("Class not found. wut?");
@@ -178,7 +178,7 @@ public class Client implements Constants {
     public void sendMessage(User addressee, String message, boolean single) throws IOException {
         try (Socket socket = new Socket(addressee.getIp(), CLIENT_PORT);
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream())) {
-            Command command = new Command(single ? Command.TYPE_SINGLE_MESSAGE : Command.TYPE_MULTI_MESSAGE, message);
+            Message command = new Message(single ? Message.TYPE_SINGLE_MESSAGE : Message.TYPE_MULTI_MESSAGE, message);
             oos.writeObject(command);
         }
     }
