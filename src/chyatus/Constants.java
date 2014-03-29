@@ -1,18 +1,21 @@
 package chyatus;
 
 /**
+ * Constants
  *
- * @author mvas
+ * @author M.Vasileusky
  */
 public interface Constants {
     
     // server port is for "server" functionality: waiting for system requests,
     // like requesting users list
-    public static final int SERVER_PORT = 6761;
+    public int SYSTEM_PORT = 6761;
     
     // client port is for "client" functionality: requesting users list, messaging..
-    public static final int CLIENT_PORT = 6762;
+    public int USER_PORT = 6762;
+    
+    public String SEPARATOR = "_";
     
     // commands
-    static String USERS_LIST = "HELLO";
+    public byte USERS_LIST_COMMAND = 1;
 }

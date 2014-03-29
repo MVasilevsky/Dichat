@@ -1,5 +1,6 @@
 package chyatus.users;
 
+import java.net.InetAddress;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -28,5 +29,14 @@ public final class Users {
 
     public static synchronized boolean addAll(Collection<User> users) {
         return allUsers.addAll(users);
+    }
+
+    public static synchronized User findByAddress(InetAddress address) {
+        for (User user : allUsers) {
+            if (address.equals(user.getIp())) {
+                return user;
+            }
+        }
+        return null;
     }
 }

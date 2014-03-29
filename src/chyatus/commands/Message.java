@@ -9,8 +9,7 @@ import java.io.Serializable;
  */
 public class Message implements Serializable {
 
-    public static final int TYPE_SINGLE_MESSAGE = 1;
-    public static final int TYPE_MULTI_MESSAGE = 2;
+    public static final int PLAIN_MESSAGE = 1;
 
     public int type;
     public String text;

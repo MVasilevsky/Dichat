@@ -43,6 +43,11 @@ public class User implements Serializable {
     }
 
     @Override
+    public String toString() {
+        return "User{" + "username=" + username + ", ip=" + ip.getHostAddress() + '}';
+    }
+
+    @Override
     public int hashCode() {
         int hash = 7;
         hash = 59 * hash + Objects.hashCode(this.username);
