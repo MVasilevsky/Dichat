@@ -7,8 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * Messages from other users listener
@@ -17,6 +16,8 @@ import java.util.logging.Logger;
  */
 public class MessagesListener implements Runnable {
 
+    private static final Logger log = org.apache.log4j.Logger.getLogger(MessagesListener.class);
+
     @Override
     public void run() {
         try (ServerSocket serverSocket = new ServerSocket(Constants.USER_PORT)) {
@@ -24,12 +25,13 @@ public class MessagesListener implements Runnable {
                 try (Socket socket = serverSocket.accept();
                         ObjectInputStream ois = new ObjectInputStream(socket.getInputStream())) {
                     Message message = (Message) ois.readObject();
-                    System.out.println("New message from " + Users.findByAddress(socket.getInetAddress()).getUsername() + ": " + message.text);
+                    System.out.println(Users.findByAddress(socket.getInetAddress()).getUsername() + ": " + message.text);
+                    log.info("New message from " + Users.findByAddress(socket.getInetAddress()).getUsername() + ": " + message.text);
                 } catch (ClassNotFoundException ex) {
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(MessagesListener.class.getName()).log(Level.SEVERE, null, ex);
+            log.error("Error while listening new messages " + ex);
         }
     }
 

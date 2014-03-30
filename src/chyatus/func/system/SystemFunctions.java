@@ -12,6 +12,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Set;
+import org.apache.log4j.Logger;
 
 /**
  * System functions.
@@ -22,6 +23,7 @@ import java.util.Set;
  */
 public class SystemFunctions {
 
+    private static final Logger log = Logger.getLogger(SystemFunctions.class);
     private static final int TIMEOUT = 3000;
 
     /**
@@ -46,7 +48,7 @@ public class SystemFunctions {
                     SYSTEM_PORT);
             requestSocket.send(sendPacket);
 
-            System.out.println("Request users list from machines in network: "
+            log.info("Request users list from machines in network: "
                     + Utils.getBroadcastAddress().getHostAddress() + ". Waiting for " + (TIMEOUT / 1000) + " seconds");
 
             // Wait for answer
@@ -55,8 +57,9 @@ public class SystemFunctions {
                     ObjectInputStream ois = new ObjectInputStream(socket.getInputStream())) {
                 Users.addAll((Set<User>) ois.readObject());
             } catch (SocketTimeoutException e) {
-                System.out.println("No users. I'm alone");
+                log.info("No users. I'm alone");
             } catch (ClassNotFoundException e) {
+                log.error(e);
             }
         }
     }

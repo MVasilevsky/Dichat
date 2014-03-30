@@ -11,6 +11,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -18,6 +19,8 @@ import java.net.UnknownHostException;
  */
 public class UsersListener implements Runnable {
 
+    private static final Logger log = Logger.getLogger(UsersListener.class);
+    
     /**
      * Check all ip's and decide, should I answer or not (only one user should
      * answer)
@@ -29,14 +32,14 @@ public class UsersListener implements Runnable {
             int myHashCode = InetAddress.getLocalHost().hashCode();
             for (User user : Users.getAll()) {
                 if (user.getIp().hashCode() > myHashCode) {
-                    System.out.println("I shouldn't answer");
+                    log.info("Request received, but I shouldn't answer");
                     return false;
                 }
             }
-            System.out.println("I should answer");
+            System.out.println("Request received, I should answer");
             return true;
         } catch (UnknownHostException ex) {
-            System.out.println("I shouldn't answer");
+            log.error(ex);
             return false;
         }
     }
@@ -66,7 +69,7 @@ public class UsersListener implements Runnable {
                         try (Socket tcpSocket = new Socket(userAddress, Constants.SYSTEM_PORT);
                                 ObjectOutputStream oos = new ObjectOutputStream(tcpSocket.getOutputStream())) {
                             oos.writeObject(Users.getAll());
-                            System.out.println("Send information to " + username + " from " + userAddress.getHostAddress());
+                            log.info("Send information to " + username + " from " + userAddress.getHostAddress());
                         }
                     }
 
@@ -76,9 +79,9 @@ public class UsersListener implements Runnable {
             }
 
         } catch (SocketException ex) {
-            System.err.println("Can't create socket for listening new connections: " + ex.getLocalizedMessage());
+            log.error("Can't create socket for listening new connections: " + ex.getLocalizedMessage());
         } catch (IOException ex) {
-            System.err.println("Error while listening new connections: " + ex.getLocalizedMessage());
+            log.error("Error while listening new connections: " + ex.getLocalizedMessage());
         }
 
     }

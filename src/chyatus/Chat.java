@@ -8,6 +8,7 @@ import chyatus.users.User;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import org.apache.log4j.Logger;
 
 /**
  * Distributed chat.
@@ -21,10 +22,13 @@ import java.net.InetAddress;
  */
 public class Chat {
 
+    private static final Logger logger = Logger.getLogger(Chat.class);
     private static User user;
 
     public static void main(String[] args) throws Exception {
 
+        logger.info("Application started");
+        
         System.out.println("Your username: ");
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String username = reader.readLine();
