@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 public class UsersListener implements Runnable {
 
     private static final Logger log = Logger.getLogger(UsersListener.class);
-    
+
     /**
      * Check all ip's and decide, should I answer or not (only one user should
      * answer)
@@ -66,11 +66,12 @@ public class UsersListener implements Runnable {
 
                     // send response (if needed)
                     if (ifShouldIAnswer()) {
+                        log.info("Sending information to " + username + " from " + userAddress.getHostAddress());
                         try (Socket tcpSocket = new Socket(userAddress, Constants.SYSTEM_PORT);
                                 ObjectOutputStream oos = new ObjectOutputStream(tcpSocket.getOutputStream())) {
                             oos.writeObject(Users.getAll());
-                            log.info("Send information to " + username + " from " + userAddress.getHostAddress());
                         }
+                        log.info("Information sent");
                     }
 
                     // save new user
@@ -79,7 +80,7 @@ public class UsersListener implements Runnable {
             }
 
         } catch (SocketException ex) {
-            log.error("Can't create socket for listening new connections: " + ex.getLocalizedMessage());
+            log.error(ex);
         } catch (IOException ex) {
             log.error("Error while listening new connections: " + ex.getLocalizedMessage());
         }

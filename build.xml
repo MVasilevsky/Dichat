@@ -70,4 +70,18 @@
     nbproject/build-impl.xml file. 
 
     -->
+
+	<target name="-post-jar">
+        <property name="combined.jar" value="dist/ChatusCombined.jar" />
+        <jar jarfile="${combined.jar}" compress="true" level="9">
+            <zipfileset src="${dist.jar}" />
+            <zipfileset src="lib/log4j-1.2.17.jar" excludes="META-INF/**" />
+            <manifest>
+                <attribute name="Main-Class" value="${main.class}"/>
+            </manifest>
+        </jar>
+        <delete dir="dist/lib" />
+        <move file="${combined.jar}" tofile="${dist.jar}" />
+    </target>
+
 </project>
