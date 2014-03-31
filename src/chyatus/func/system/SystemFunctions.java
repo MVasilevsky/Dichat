@@ -8,8 +8,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.SocketTimeoutException;
 import java.util.Set;
 import org.apache.log4j.Logger;
@@ -34,7 +37,7 @@ public class SystemFunctions {
      */
     public static void loadUsersList(User user) throws IOException {
         try (DatagramSocket requestSocket = new DatagramSocket();
-                ServerSocket responseSocket = new ServerSocket(SYSTEM_PORT)) {
+                ServerSocket responseSocket = new ServerSocket(SYSTEM_PORT, 5, InetAddress.getLocalHost())) {
 
             // Send request with my username
             requestSocket.setBroadcast(true);
@@ -53,6 +56,7 @@ public class SystemFunctions {
 
             // Wait for answer
             responseSocket.setSoTimeout(TIMEOUT);
+//            responseSocket.setReuseAddress(true);
             try (Socket socket = responseSocket.accept();
                     ObjectInputStream ois = new ObjectInputStream(socket.getInputStream())) {
                 Users.addAll((Set<User>) ois.readObject());
