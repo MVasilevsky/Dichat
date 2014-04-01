@@ -28,7 +28,7 @@ public class Chat {
     public static void main(String[] args) throws Exception {
 
         logger.info("Application started");
-        
+
         System.out.println("Your username: ");
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String username = reader.readLine();
