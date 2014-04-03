@@ -1,9 +1,9 @@
 package chyatus.func.user;
 
+import chyatus.Chat;
 import static chyatus.Constants.USER_PORT;
+import chyatus.User;
 import chyatus.commands.Message;
-import chyatus.users.User;
-import chyatus.users.Users;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -42,7 +42,7 @@ public class UserFunctions {
      * @throws IOException
      */
     public static void sendMessageToAll(Message message) throws IOException {
-        for (User user : Users.getAll()) {
+        for (User user : Chat.users.getAll()) {
             sendMessage(user, message);
         }
         log.info("Message sent to all users");

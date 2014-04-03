@@ -1,18 +1,17 @@
 package chyatus.func.system;
 
+import chyatus.Chat;
+import chyatus.Constants;
 import static chyatus.Constants.*;
+import chyatus.User;
 import chyatus.Utils;
-import chyatus.users.User;
-import chyatus.users.Users;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.SocketTimeoutException;
 import java.util.Set;
 import org.apache.log4j.Logger;
@@ -59,11 +58,15 @@ public class SystemFunctions {
 //            responseSocket.setReuseAddress(true);
             try (Socket socket = responseSocket.accept();
                     ObjectInputStream ois = new ObjectInputStream(socket.getInputStream())) {
-                Users.addAll((Set<User>) ois.readObject());
+                Chat.users.addAll((Set<User>) ois.readObject());
             } catch (SocketTimeoutException e) {
                 log.info("No users. I'm alone");
             } catch (ClassNotFoundException e) {
                 log.error(e);
+            }
+        } finally {
+            synchronized (Chat.usersLoaded) {
+                Chat.usersLoaded.notify();
             }
         }
     }
@@ -74,6 +77,27 @@ public class SystemFunctions {
     public static void listenToNewUsers() {
         Thread listener = new Thread(new UsersListener());
         listener.start();
+    }
+
+    /**
+     * Send bye message to all online users
+     */
+    public static void bye() {
+        try (DatagramSocket requestSocket = new DatagramSocket()) {
+            byte[] message = {Constants.BYE_COMMAND};
+            DatagramPacket sendPacket;
+            for (User u : Chat.users.getAll()) {
+                if (!u.equals(Chat.users.getMyself())) {
+                    sendPacket = new DatagramPacket(message,
+                            message.length,
+                            u.getIp(),
+                            SYSTEM_PORT);
+                    requestSocket.send(sendPacket);
+                }
+            }
+        } catch (IOException ex) {
+            log.warn("Error while sending bye message: " + ex);
+        }
     }
 
 }

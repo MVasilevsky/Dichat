@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
  *
  * @author mvas
  */
-public class Messages {
+public class I18nStrings {
 
     private static final ResourceBundle messages = ResourceBundle.getBundle("messages", Locale.getDefault());
 

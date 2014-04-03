@@ -1,8 +1,8 @@
 package chyatus.func.user;
 
+import chyatus.Chat;
 import chyatus.Constants;
 import chyatus.commands.Message;
-import chyatus.users.Users;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
  */
 public class MessagesListener implements Runnable {
 
-    private static final Logger log = org.apache.log4j.Logger.getLogger(MessagesListener.class);
+    private static final Logger log = Logger.getLogger(MessagesListener.class);
 
     @Override
     public void run() {
@@ -25,8 +25,8 @@ public class MessagesListener implements Runnable {
                 try (Socket socket = serverSocket.accept();
                         ObjectInputStream ois = new ObjectInputStream(socket.getInputStream())) {
                     Message message = (Message) ois.readObject();
-                    System.out.println(Users.findByAddress(socket.getInetAddress()).getUsername() + ": " + message.text);
-                    log.info("New message from " + Users.findByAddress(socket.getInetAddress()).getUsername() + ": " + message.text);
+                    System.out.println(Chat.users.findByAddress(socket.getInetAddress()).getUsername() + ": " + message.getText());
+                    log.info("New message from " + Chat.users.findByAddress(socket.getInetAddress()).getUsername() + ": " + message.getText());
                 } catch (ClassNotFoundException ex) {
                 }
             }

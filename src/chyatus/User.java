@@ -1,4 +1,4 @@
-package chyatus.users;
+package chyatus;
 
 import java.io.Serializable;
 import java.net.InetAddress;

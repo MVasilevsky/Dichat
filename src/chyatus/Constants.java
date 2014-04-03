@@ -18,4 +18,5 @@ public interface Constants {
     
     // commands
     public byte USERS_LIST_COMMAND = 1;
+    public byte BYE_COMMAND = 2;
 }
