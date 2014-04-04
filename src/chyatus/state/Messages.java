@@ -4,8 +4,10 @@ import chyatus.User;
 import chyatus.commands.Message;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Messages container.
@@ -14,7 +16,12 @@ import java.util.Set;
  */
 public class Messages extends ApplicationState {
 
-    private final Set<Message> allMessages = new HashSet<>();
+    private final Set<Message> allMessages = new TreeSet<>(new Comparator<Message>() {
+        @Override
+        public int compare(Message o1, Message o2) {
+            return o1.getDate().compareTo(o2.getDate());
+        }
+    });
 
     public synchronized Set<Message> getAll() {
         return Collections.unmodifiableSet(allMessages);

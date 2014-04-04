@@ -25,7 +25,6 @@ public class MessagesListener implements Runnable {
                 try (Socket socket = serverSocket.accept();
                         ObjectInputStream ois = new ObjectInputStream(socket.getInputStream())) {
                     Message message = (Message) ois.readObject();
-                    System.out.println(Chat.users.findByAddress(socket.getInetAddress()).getUsername() + ": " + message.getText());
                     log.info("New message from " + Chat.users.findByAddress(socket.getInetAddress()).getUsername() + ": " + message.getText());
                 } catch (ClassNotFoundException ex) {
                 }
